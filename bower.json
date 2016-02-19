@@ -1,0 +1,31 @@
+{
+  "name": "djs-sticky",
+  "description": "Javascript library to stick elements while scrolling",
+  "main": [
+    "dist/djs-sticky.js",
+    "dist/djs-sticky.min.js"
+  ],
+  "authors": [
+    "Edouard Demotes-Mainard"
+  ],
+  "license": "https://opensource.org/licenses/BSD-2-Clause",
+  "keywords": [
+    "scroll",
+    "stick",
+    "attach"
+  ],
+  "homepage": "https://github.com/EdouardDem/djs-sticky",
+  "moduleType": [
+    "globals"
+  ],
+  "dependencies": {
+    "jquery": "^2.0.0",
+    "djs-resize": "^0.1.2"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ]
+}
