@@ -1,170 +1,255 @@
-var __STICKY_COUNTER = 0;
 /**
- * Cette classe gère les sticky
+ * @author Edouard Demotes-Mainard <https://github.com/EdouardDem>
+ * @license http://opensource.org/licenses/BSD-2-Clause BSD 2-Clause License
+ */
+
+/**
+ * Object djs for namespace
+ */
+window.djs = window.djs || {};
+/**
+ * This object attach a DOM element when scrolling.
+ * This object is "chainable"
+ */
+/**
+ * Counter for unique sticky id
+ *
+ * @type {number}
+ * @private
+ */
+var __DJS_STICKY_COUNTER = 0;
+/**
+ * Constructor
  *
  * @requires resize
  *
- * @param {Object} $element				L'élément à fixer
- * @param {Object} $box					L'élément limitant le déplacementent
- * @param {Object} $widthReferrer		L'élément servant de référence pour la largeur
- * @param {Integer} topOffset			L'offset par rapport au bas de la page
- * @param {Integer} bottomOffset		L'offset par rapport au bas de la page
+ * @param {Object} $element				Sticky element
+ * @param {Object} $box					Sticky container
+ * @param {Object} options				Additional options
  */
-function Sticky($element, $box, $widthReferrer, topOffset, bottomOffset) {
+djs.Sticky = function($element, $box, options) {
 
-	//Paramétrage
+	// jQuery elements
 	this.$window = $(window);
-	this.$scroll = this.$window;
 
-	this.windowIsScroll = this.$scroll.is(this.$window);
+	// Default options
+	var defaultOptions = {
+		scroll: this.$window,
+		width: $box,
+		top: 0,
+		bottom: 0
+	};
+	options = $.extend({}, defaultOptions, options);
 
+	// Other jQuery elements
 	this.$element = $element;
 	this.$box = $box;
-	this.$widthReferrer = $widthReferrer;
+	this.$scroll = options.scroll;
 	this.$placeholder = null;
 
-	this.topOffset = topOffset != null ? topOffset : 0;
-	this.bottomOffset = bottomOffset != null ? bottomOffset : 0;
-
+	// Properties
+	this.width = options.width;
+	this.top = options.top;
+	this.bottom = options.bottom;
 	this.on = false;
 
-	this.id = 'sticky_'+__STICKY_COUNTER;
-	__STICKY_COUNTER++;
+	// Unique id
+	this.id = 'sticky_'+__DJS_STICKY_COUNTER;
+	__DJS_STICKY_COUNTER++;
 
-}
+};
 /**
- * Active l'élément
+ * Bind events, create placeholder and activate element
+ *
+ * @return {Object}
  */
-Sticky.prototype.bind = function() {
+djs.Sticky.prototype.bind = function() {
+
+	// Activate element
 	this.on = true;
-	this.$scroll.bind('scroll.'+this.id, function(){ this.update(); }.bind(this));
-	resize.bind(this.id, function(){
-		//Vérifie si on est actif
-		if (!this.on) return;
-		//Met à jour la largeur
-		this.$element.width(this.$widthReferrer.width());
-		//Met à jour le placeholder
-		this.$placeholder.width(this.$element.outerWidth());
-		this.$placeholder.height(this.$element.outerHeight());
 
-		this.update();
-	}.bind(this), resize.stacks.last);
+	// Update on scroll
+	this.$scroll.bind('scroll.'+this.id, this._update.bind(this));
 
-	//Récupère la largeur
-	this.$element.width(this.$widthReferrer.width());
+	// Bind the resize
+	djs.resize.bind(this.id, this._resize.bind(this), djs.resize.stacks.last);
 
-	//Créer le placeholder
-	this.$placeholder = $('<div class="sticky-placeholder"></div>');
+	// Create placeholder
+	this.$placeholder = $('<div class="djs-sticky-placeholder"></div>');
 	this.$placeholder.hide();
-	this.$placeholder.width(this.$element.outerWidth());
-	this.$placeholder.height(this.$element.outerHeight());
 	this.$element.after(this.$placeholder);
 
-	//Met à jour
-	this.update();
+	// Set element width
+	this._setWidth();
+
+	// Update display
+	this._update();
+
 	return this;
 };
 /**
- * Désactive l'élement et remet toutes les valeurs au valeurs initiales
+ * Deactivate element, remove placeholder and unbind events
+ *
+ * @return {Object}
  */
-Sticky.prototype.unbind = function() {
+djs.Sticky.prototype.unbind = function() {
+
+	// Deactivate
 	this.on = false;
+
+	// Unbind scroll
 	this.$scroll.unbind('scroll.'+this.id);
-	resize.unbind(this.id, resize.stacks.last);
+
+	// Unbind resize
+	djs.resize.unbind(this.id, djs.resize.stacks.last);
+
+	// Reset element CSS
 	this.$element.css({
 		position: '',
 		bottom: '',
 		top: '',
 		width: ''
 	});
-	//Supprime le placeholder
+
+	// Remove placeholder
 	this.$placeholder.remove();
 	this.$placeholder = null;
 
 	return this;
 };
 /**
- * Rafraichi les valeurs
+ * Rebind object
+ *
+ * @return {Object}
  */
-Sticky.prototype.refresh = function() {
-	this.unbind();
-	this.bind();
-	return this;
+djs.Sticky.prototype.rebind = function() {
+	return this.unbind().bind();
 };
 /**
- * Fonction de scrolling
+ * Force refresh display
+ *
+ * @return {Object}
  */
-Sticky.prototype.update = function() {
 
-	if (!this.on) return this;
+djs.Sticky.prototype.refresh = function() {
+	this._resize();
 
+	return this;
+};
+
+
+
+
+/**
+ * Called on window resize
+ *
+ * @private
+ */
+djs.Sticky.prototype._resize = function() {
+
+	// Check if active
+	if (!this.on) return;
+
+	// Update width
+	this._setWidth();
+
+	// Update display
+	this._update();
+};
+/**
+ * Set width of sticky element
+ *
+ * @private
+ */
+djs.Sticky.prototype._setWidth = function() {
+
+	// width is jQuery object or not ?
+	if (typeof this.width == "object") {
+		this.$element.width(this.width.width());
+	} else {
+		this.$element.width(this.width);
+	}
+
+	// Update placeholder dimensions
+	this.$placeholder.width(this.$element.outerWidth());
+	this.$placeholder.height(this.$element.outerHeight());
+};
+/**
+ * Called on scroll
+ *
+ * @private
+ */
+djs.Sticky.prototype._update = function() {
+
+	// Check if active
+	if (!this.on) return;
+
+	// Get actual values
 	var scrollTop = this.$scroll.scrollTop();
 	var eleH = this.$element.height();
 	var boxH = this.$box.height();
 	var winH = this.$window.height();
 	var boxOffset = this.$box.offset();
-	if (!this.windowIsScroll) {
-		boxOffset.top = boxOffset.top + scrollTop;
-	}
-	if (scrollTop > boxOffset.top - this.topOffset &&
-		scrollTop + winH >= boxOffset.top + eleH + this.bottomOffset
-		) {
 
-		//Element trop petit ?
+	// If actual scroll is lower than box' top + top offset
+	if (scrollTop > boxOffset.top - this.top &&
+		scrollTop + winH >= boxOffset.top + eleH + this.bottom) {
+
+		var css = {};
+		css.position = 'fixed';
+
+		// If the element is smaller than the window
 		if (boxOffset.top + eleH <= winH) {
-			//Scroll en bas
-			if (scrollTop - boxOffset.top >= boxH - eleH - this.bottomOffset) {
-				var bottom = scrollTop + winH - (boxOffset.top + this.topOffset + boxH - this.bottomOffset);
-				this.$element.css({
-					position: 'fixed',
-					bottom: bottom+'px',
-					top: '',
-				});
+
+			// End of scrolling, put element at the bottom of box
+			if (scrollTop - boxOffset.top >= boxH - eleH - this.bottom) {
+
+				css.bottom = (scrollTop + winH - (boxOffset.top + this.top + boxH - this.bottom)) + 'px';
+				css.top = '';
 			}
-			//Scroll au milieu
+			// Is scrolling, put the element on top
 			else {
-				this.$element.css({
-					position: 'fixed',
-					bottom: '',
-					top: this.topOffset+'px',
-				});
-			}
-		}
-		//Element suffisement grand
-		else {
-			//Scroll en bas
-			if (scrollTop + winH >= boxOffset.top + boxH) {
-				var bottom = scrollTop + winH - (boxOffset.top + boxH - this.bottomOffset);
-				this.$element.css({
-					position: 'fixed',
-					bottom: bottom+'px',
-					top: '',
-				});
-			}
-			//Scroll au milieu
-			else {
-				this.$element.css({
-					position: 'fixed',
-					bottom: this.bottomOffset + 'px',
-					top: '',
-				});
+
+				css.bottom = '';
+				css.top = this.top + 'px';
 			}
 		}
 
-		//Fixed => affiche le placeholder
+		// If the element is higher than the window
+		else {
+
+			// End of scrolling
+			if (scrollTop + winH >= boxOffset.top + boxH) {
+
+				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.bottom)) + 'px';
+				css.top = '';
+			}
+			// While scrolling
+			else {
+
+				css.bottom = this.bottom + 'px';
+				css.top = '';
+			}
+		}
+
+		// Apply CSS
+		this.$element.css(css);
+
+		// Display placeholder
 		this.$placeholder.show();
 	}
-	//Scroll en haut
+
+	// Scroll on top, no CSS needed
 	else {
+		// Reset CSS
 		this.$element.css({
 			position: '',
 			bottom: '',
-			top: '',
+			top: ''
 		});
 
-		//Static => cache le placeholder
+		// Hide placeholder
 		this.$placeholder.hide();
 	}
 
-	return this;
 };
