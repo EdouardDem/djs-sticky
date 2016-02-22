@@ -56,6 +56,7 @@ djs.Sticky = function($element, options) {
 	this.width = options.width;
 	this.top = options.top;
 	this.bottom = options.bottom;
+	this.position = 'top';
 	this.on = false;
 
 	// Unique id
@@ -115,6 +116,9 @@ djs.Sticky.prototype.unbind = function() {
 		top: '',
 		width: ''
 	});
+
+	// Position
+	this.position = 'top';
 
 	// Remove placeholder
 	this.$placeholder.remove();
@@ -195,6 +199,7 @@ djs.Sticky.prototype._update = function() {
 	var boxH = this.$box.outerHeight();
 	var winH = this.$window.height();
 	var boxOffset = this.$box.offset();
+	var position = null;
 
 	// If actual scroll is lower than box' top + top offset
 	if (scrollTop > boxOffset.top - this.top &&
@@ -211,6 +216,7 @@ djs.Sticky.prototype._update = function() {
 
 				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.bottom)) + 'px';
 				css.top = '';
+				position = 'bottom';
 			}
 			// Is scrolling, put the element on top
 			else {
@@ -228,6 +234,7 @@ djs.Sticky.prototype._update = function() {
 
 				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.bottom)) + 'px';
 				css.top = '';
+				position = 'bottom';
 			}
 			// While scrolling
 			else {
@@ -252,9 +259,39 @@ djs.Sticky.prototype._update = function() {
 			bottom: '',
 			top: ''
 		});
+		position = 'top';
 
 		// Hide placeholder
 		this.$placeholder.hide();
 	}
 
+	// Callback
+	if (position != this.position) {
+		// Did reach a stop
+		if (position != null) {
+			this.didEnd(position);
+		}
+		// Did start
+		else {
+			this.didStart(this.position);
+		}
+		//Save position
+		this.position = position;
+	}
+
 };
+
+//==================================
+// Callbacks
+/**
+ * Called when the element starts to stick
+ *
+ * @param {String} previous		The previous position (top or bottom)
+ */
+djs.Sticky.prototype.didStart = function(previous) {};
+/**
+ * Called when the element reach stop
+ *
+ * @param {String} position		The stop position (top or bottom)
+ */
+djs.Sticky.prototype.didEnd = function(position) {};

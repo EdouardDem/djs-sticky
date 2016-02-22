@@ -36,9 +36,6 @@ $(document).ready(function () {
 
 	//--------------------
 	// Init resize
-
-	//--------------------
-	// Init resize
 	djs.resize.init();
 
 	//--------------------
@@ -71,5 +68,20 @@ $(document).ready(function () {
 		box: $('#bottom-block'),
 		width: $('#sticky-cnt-4').parent()
 	})).bind());
+
+
+	//--------------------
+	// Callbacks
+	for(var i=0; i<stickies.length; i++) {
+		stickies[i].didEnd = function(position) {
+			displayLog('Sticky "' + this.id + '" did reach ' + position);
+		}.bind(stickies[i]);
+	}
+	for(var i=0; i<stickies.length; i++) {
+		stickies[i].didStart = function(position) {
+			displayLog('Sticky "' + this.id + '" did start from ' + position);
+		}.bind(stickies[i]);
+	}
+
 
 });
