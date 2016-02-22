@@ -59,21 +59,38 @@
             margin-top: 20px;
             position: relative;
         }
+        #controls {
+            position: fixed;
+            right: 8px;
+            top: 8px;
+            z-index: 100;
+        }
         #sticky-cnt-2:after {
-            content: "";
+            content: "Absolute position, 60px height";
             display: block;
-            height:60px;
+            height: 20px;
+            padding: 20px;
             position: absolute;
             left: 0;
             right: 0;
             bottom: 0;
             background: #ccc;
+            color: #999;
         }
 
 
         .blue {
             padding: 20px;
+            background: #9c4de4;
+        }
+        .djs-sticky-top .blue {
             background: #299fe4;
+        }
+        .djs-sticky-middle .blue {
+            background: #65e4e1;
+        }
+        .djs-sticky-bottom .blue {
+            background: #66e48b;
         }
         ul {
             padding-left: 15px;
@@ -99,7 +116,7 @@
     </style>
 </head>
 <body>
-    <div class="cnt">
+    <div class="cnt" id="controls">
         <button onclick="toggle();" id="toggle">Deactivate</button>
     </div>
     <div class="cnt">

@@ -46,6 +46,13 @@ djs.Sticky = function($element, options) {
 	};
 	options = $.extend({}, defaultOptions, options);
 
+	// CSS classes
+	this.classes = {
+		top: 'djs-sticky-top',
+		middle: 'djs-sticky-middle',
+		bottom: 'djs-sticky-bottom'
+	};
+
 	// Other jQuery elements
 	this.$element = $element;
 	this.$box = options.box;
@@ -56,7 +63,7 @@ djs.Sticky = function($element, options) {
 	this.width = options.width;
 	this.top = options.top;
 	this.bottom = options.bottom;
-	this.position = 'top';
+	this.position = null;
 	this.on = false;
 
 	// Unique id
@@ -88,6 +95,9 @@ djs.Sticky.prototype.bind = function() {
 
 	// Set element width
 	this._setWidth();
+
+	// Position
+	this._setPosition('top');
 
 	// Callback
 	this.didBind();
@@ -125,8 +135,10 @@ djs.Sticky.prototype.unbind = function() {
 		width: ''
 	});
 
-	// Position
-	this.position = 'top';
+	// Reset element classes
+	$.each(this.classes, function(i,e) {
+		this.$element.removeClass(e);
+	}.bind(this));
 
 	// Remove placeholder
 	this.$placeholder.remove();
@@ -192,6 +204,25 @@ djs.Sticky.prototype._setWidth = function() {
 	this.$placeholder.height(this.$element.outerHeight());
 };
 /**
+ * Define position (without callbacks)
+ *
+ * @private
+ * @param string position
+ */
+djs.Sticky.prototype._setPosition = function(position) {
+
+	// Remove old class
+	if (this.position != null) {
+		this.$element.removeClass(this.classes[this.position]);
+	}
+
+	// Add new class
+	this.$element.addClass(this.classes[position]);
+
+	//Save position
+	this.position = position;
+};
+/**
  * Called on scroll
  *
  * @callback didStart
@@ -209,7 +240,7 @@ djs.Sticky.prototype._update = function() {
 	var boxH = this.$box.outerHeight();
 	var winH = this.$window.height();
 	var boxOffset = this.$box.offset();
-	var position = null;
+	var position = "middle";
 
 	// If actual scroll is lower than box' top + top offset
 	if (scrollTop > boxOffset.top - this.top &&
@@ -275,18 +306,18 @@ djs.Sticky.prototype._update = function() {
 		this.$placeholder.hide();
 	}
 
-	// Callback
+	// Callback && CSS classes
 	if (position != this.position) {
 		// Did reach a stop
-		if (position != null) {
+		if (position != 'middle') {
 			this.didStop(position);
 		}
 		// Did start
 		else {
 			this.didStart(this.position);
 		}
-		//Save position
-		this.position = position;
+
+		this._setPosition(position);
 	}
 
 };
