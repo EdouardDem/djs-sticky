@@ -24,10 +24,9 @@ var __DJS_STICKY_COUNTER = 0;
  * @requires resize
  *
  * @param {Object} $element				Sticky element
- * @param {Object} $box					Sticky container
  * @param {Object} options				Additional options
  */
-djs.Sticky = function($element, $box, options) {
+djs.Sticky = function($element, options) {
 
 	// jQuery elements
 	this.$window = $(window);
@@ -35,7 +34,8 @@ djs.Sticky = function($element, $box, options) {
 	// Default options
 	var defaultOptions = {
 		scroll: this.$window,
-		width: $box,
+		width: $element.parent(),
+		$box: $element.parent(),
 		top: 0,
 		bottom: 0
 	};
@@ -43,7 +43,7 @@ djs.Sticky = function($element, $box, options) {
 
 	// Other jQuery elements
 	this.$element = $element;
-	this.$box = $box;
+	this.$box = options.$box;
 	this.$scroll = options.scroll;
 	this.$placeholder = null;
 
