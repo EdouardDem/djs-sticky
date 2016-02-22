@@ -46,6 +46,13 @@ djs.Sticky = function($element, options) {
 	};
 	options = $.extend({}, defaultOptions, options);
 
+	// CSS classes
+	this.classes = {
+		top: 'djs-sticky-top',
+		middle: 'djs-sticky-middle',
+		bottom: 'djs-sticky-bottom'
+	};
+
 	// Other jQuery elements
 	this.$element = $element;
 	this.$box = options.box;
@@ -56,6 +63,7 @@ djs.Sticky = function($element, options) {
 	this.width = options.width;
 	this.top = options.top;
 	this.bottom = options.bottom;
+	this.position = null;
 	this.on = false;
 
 	// Unique id
@@ -66,6 +74,7 @@ djs.Sticky = function($element, options) {
 /**
  * Bind events, create placeholder and activate element
  *
+ * @callback didBind
  * @return {Object}
  */
 djs.Sticky.prototype.bind = function() {
@@ -87,6 +96,12 @@ djs.Sticky.prototype.bind = function() {
 	// Set element width
 	this._setWidth();
 
+	// Position
+	this._setPosition('top');
+
+	// Callback
+	this.didBind();
+
 	// Update display
 	this._update();
 
@@ -95,9 +110,13 @@ djs.Sticky.prototype.bind = function() {
 /**
  * Deactivate element, remove placeholder and unbind events
  *
+ * @callback willUnbind
  * @return {Object}
  */
 djs.Sticky.prototype.unbind = function() {
+
+	// Callback
+	this.willUnbind();
 
 	// Deactivate
 	this.on = false;
@@ -115,6 +134,11 @@ djs.Sticky.prototype.unbind = function() {
 		top: '',
 		width: ''
 	});
+
+	// Reset element classes
+	$.each(this.classes, function(i,e) {
+		this.$element.removeClass(e);
+	}.bind(this));
 
 	// Remove placeholder
 	this.$placeholder.remove();
@@ -180,8 +204,29 @@ djs.Sticky.prototype._setWidth = function() {
 	this.$placeholder.height(this.$element.outerHeight());
 };
 /**
+ * Define position (without callbacks)
+ *
+ * @private
+ * @param string position
+ */
+djs.Sticky.prototype._setPosition = function(position) {
+
+	// Remove old class
+	if (this.position != null) {
+		this.$element.removeClass(this.classes[this.position]);
+	}
+
+	// Add new class
+	this.$element.addClass(this.classes[position]);
+
+	//Save position
+	this.position = position;
+};
+/**
  * Called on scroll
  *
+ * @callback didStart
+ * @callback didStop
  * @private
  */
 djs.Sticky.prototype._update = function() {
@@ -195,6 +240,7 @@ djs.Sticky.prototype._update = function() {
 	var boxH = this.$box.outerHeight();
 	var winH = this.$window.height();
 	var boxOffset = this.$box.offset();
+	var position = "middle";
 
 	// If actual scroll is lower than box' top + top offset
 	if (scrollTop > boxOffset.top - this.top &&
@@ -211,6 +257,7 @@ djs.Sticky.prototype._update = function() {
 
 				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.bottom)) + 'px';
 				css.top = '';
+				position = 'bottom';
 			}
 			// Is scrolling, put the element on top
 			else {
@@ -228,6 +275,7 @@ djs.Sticky.prototype._update = function() {
 
 				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.bottom)) + 'px';
 				css.top = '';
+				position = 'bottom';
 			}
 			// While scrolling
 			else {
@@ -252,9 +300,47 @@ djs.Sticky.prototype._update = function() {
 			bottom: '',
 			top: ''
 		});
+		position = 'top';
 
 		// Hide placeholder
 		this.$placeholder.hide();
 	}
 
+	// Callback && CSS classes
+	if (position != this.position) {
+		// Did reach a stop
+		if (position != 'middle') {
+			this.didStop(position);
+		}
+		// Did start
+		else {
+			this.didStart(this.position);
+		}
+
+		this._setPosition(position);
+	}
+
 };
+
+//==================================
+// Callbacks
+/**
+ * Called when the element has been activated
+ */
+djs.Sticky.prototype.didBind = function() {};
+/**
+ * Called when the element will be deactivated
+ */
+djs.Sticky.prototype.willUnbind = function() {};
+/**
+ * Called when the element starts to stick
+ *
+ * @param {String} previous		The previous position (top or bottom)
+ */
+djs.Sticky.prototype.didStart = function(previous) {};
+/**
+ * Called when the element reach stop
+ *
+ * @param {String} position		The stop position (top or bottom)
+ */
+djs.Sticky.prototype.didStop = function(position) {};
