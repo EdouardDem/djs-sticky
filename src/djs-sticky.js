@@ -21,8 +21,7 @@ var __DJS_STICKY_COUNTER = 0;
 /**
  * Constructor
  *
- * @requires resize
- * @todo introduce min bottom space
+ * @requires djs-resize
  *
  * @param {Object} $element				Sticky element
  * @param {Object} options				Additional options
@@ -42,7 +41,8 @@ djs.Sticky = function($element, options) {
 		width: $parent,
 		box: $parent,
 		top: 0,
-		bottom: 0
+		bottom: 0,
+		boxBottom: 0
 	};
 	options = $.extend({}, defaultOptions, options);
 
@@ -63,6 +63,7 @@ djs.Sticky = function($element, options) {
 	this.width = options.width;
 	this.top = options.top;
 	this.bottom = options.bottom;
+	this.boxBottom = options.boxBottom;
 	this.position = null;
 	this.on = false;
 
@@ -250,12 +251,12 @@ djs.Sticky.prototype._update = function() {
 		css.position = 'fixed';
 
 		// If the element is smaller than the window
-		if (this.top + eleH <= winH) {
+		if (this.top + eleH  + this.bottom <= winH) {
 
 			// End of scrolling, put element at the bottom of box
-			if (scrollTop - boxOffset.top >= boxH - eleH - this.top - this.bottom) {
+			if (scrollTop - boxOffset.top >= boxH - eleH - this.top - this.boxBottom) {
 
-				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.bottom)) + 'px';
+				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.boxBottom)) + 'px';
 				css.top = '';
 				position = 'bottom';
 			}
@@ -271,9 +272,9 @@ djs.Sticky.prototype._update = function() {
 		else {
 
 			// End of scrolling
-			if (scrollTop + winH >= boxOffset.top + boxH) {
+			if (scrollTop + winH - this.bottom >= boxOffset.top + boxH - this.boxBottom) {
 
-				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.bottom)) + 'px';
+				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.boxBottom)) + 'px';
 				css.top = '';
 				position = 'bottom';
 			}

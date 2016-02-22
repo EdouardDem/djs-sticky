@@ -41,21 +41,23 @@ $(document).ready(function () {
 	//--------------------
 	// First in left col
 	stickies.push(new djs.Sticky($('#sticky-cnt-1 .sticky'), {
-		top: 20
+		top: 20,
+		bottom: 20
 	}));
 
 	//--------------------
 	// Second in left col
 	stickies.push(new djs.Sticky($('#sticky-cnt-2 .sticky'), {
 		top: 20,
-		bottom: 60
+		bottom: 20,
+		boxBottom: 60
 	}));
 
 	//--------------------
 	// First outside
 	stickies.push(new djs.Sticky($('#sticky-cnt-3 .sticky'), {
 		top: 20,
-		bottom: 0,
+		bottom: 20,
 		box: $('#right-col'),
 		width: 40
 	}));
@@ -64,9 +66,19 @@ $(document).ready(function () {
 	// Second outside
 	stickies.push(new djs.Sticky($('#sticky-cnt-4 .sticky'), {
 		top: 20,
-		bottom: 0,
+		bottom: 20,
 		box: $('#bottom-block'),
 		width: $('#sticky-cnt-4').parent()
+	}));
+
+	//--------------------
+	// Third outside (with stop)
+	stickies.push(new djs.Sticky($('#sticky-cnt-5 .sticky'), {
+		top: 20,
+		bottom: 20,
+		boxBottom: 100,
+		box: $('#bottom-block'),
+		width: $('#sticky-cnt-5').parent()
 	}));
 
 
