@@ -40,48 +40,66 @@ $(document).ready(function () {
 
 	//--------------------
 	// First in left col
-	stickies.push((new djs.Sticky($('#sticky-cnt-1 .sticky'), {
+	stickies.push(new djs.Sticky($('#sticky-cnt-1 .sticky'), {
 		top: 20
-	})).bind());
+	}));
 
 	//--------------------
 	// Second in left col
-	stickies.push((new djs.Sticky($('#sticky-cnt-2 .sticky'), {
+	stickies.push(new djs.Sticky($('#sticky-cnt-2 .sticky'), {
 		top: 20,
 		bottom: 60
-	})).bind());
+	}));
 
 	//--------------------
 	// First outside
-	stickies.push((new djs.Sticky($('#sticky-cnt-3 .sticky'), {
+	stickies.push(new djs.Sticky($('#sticky-cnt-3 .sticky'), {
 		top: 20,
 		bottom: 0,
 		box: $('#right-col'),
 		width: 40
-	})).bind());
+	}));
 
 	//--------------------
-	// Seocond outside
-	stickies.push((new djs.Sticky($('#sticky-cnt-4 .sticky'), {
+	// Second outside
+	stickies.push(new djs.Sticky($('#sticky-cnt-4 .sticky'), {
 		top: 20,
 		bottom: 0,
 		box: $('#bottom-block'),
 		width: $('#sticky-cnt-4').parent()
-	})).bind());
+	}));
 
 
 	//--------------------
 	// Callbacks
 	for(var i=0; i<stickies.length; i++) {
-		stickies[i].didEnd = function(position) {
-			displayLog('Sticky "' + this.id + '" did reach ' + position);
+
+		// Bind bind callback
+		stickies[i].didBind = function() {
+			displayLog('Sticky "' + this.id + '" has been activated');
 		}.bind(stickies[i]);
-	}
-	for(var i=0; i<stickies.length; i++) {
+
+		// Bind start callback
 		stickies[i].didStart = function(position) {
 			displayLog('Sticky "' + this.id + '" did start from ' + position);
 		}.bind(stickies[i]);
+
+		// Bind end callback
+		stickies[i].didStop = function(position) {
+			displayLog('Sticky "' + this.id + '" did reach ' + position);
+		}.bind(stickies[i]);
+
+		// Bind unbind callback
+		stickies[i].willUnbind = function() {
+			displayLog('Sticky "' + this.id + '" will be deactivated');
+		}.bind(stickies[i]);
 	}
 
+
+	//--------------------
+	// Bind all
+	for(var i=0; i<stickies.length; i++) {
+		stickies[i].bind();
+	}
 
 });

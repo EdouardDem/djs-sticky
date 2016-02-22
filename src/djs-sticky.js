@@ -67,6 +67,7 @@ djs.Sticky = function($element, options) {
 /**
  * Bind events, create placeholder and activate element
  *
+ * @callback didBind
  * @return {Object}
  */
 djs.Sticky.prototype.bind = function() {
@@ -88,6 +89,9 @@ djs.Sticky.prototype.bind = function() {
 	// Set element width
 	this._setWidth();
 
+	// Callback
+	this.didBind();
+
 	// Update display
 	this._update();
 
@@ -96,9 +100,13 @@ djs.Sticky.prototype.bind = function() {
 /**
  * Deactivate element, remove placeholder and unbind events
  *
+ * @callback willUnbind
  * @return {Object}
  */
 djs.Sticky.prototype.unbind = function() {
+
+	// Callback
+	this.willUnbind();
 
 	// Deactivate
 	this.on = false;
@@ -186,6 +194,8 @@ djs.Sticky.prototype._setWidth = function() {
 /**
  * Called on scroll
  *
+ * @callback didStart
+ * @callback didStop
  * @private
  */
 djs.Sticky.prototype._update = function() {
@@ -269,7 +279,7 @@ djs.Sticky.prototype._update = function() {
 	if (position != this.position) {
 		// Did reach a stop
 		if (position != null) {
-			this.didEnd(position);
+			this.didStop(position);
 		}
 		// Did start
 		else {
@@ -284,6 +294,14 @@ djs.Sticky.prototype._update = function() {
 //==================================
 // Callbacks
 /**
+ * Called when the element has been activated
+ */
+djs.Sticky.prototype.didBind = function() {};
+/**
+ * Called when the element will be deactivated
+ */
+djs.Sticky.prototype.willUnbind = function() {};
+/**
  * Called when the element starts to stick
  *
  * @param {String} previous		The previous position (top or bottom)
@@ -294,4 +312,4 @@ djs.Sticky.prototype.didStart = function(previous) {};
  *
  * @param {String} position		The stop position (top or bottom)
  */
-djs.Sticky.prototype.didEnd = function(position) {};
+djs.Sticky.prototype.didStop = function(position) {};
