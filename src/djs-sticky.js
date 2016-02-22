@@ -22,20 +22,25 @@ var __DJS_STICKY_COUNTER = 0;
  * Constructor
  *
  * @requires resize
+ * @todo introduce min bottom space
  *
  * @param {Object} $element				Sticky element
- * @param {Object} $box					Sticky container
  * @param {Object} options				Additional options
  */
-djs.Sticky = function($element, $box, options) {
+djs.Sticky = function($element, options) {
+
+	//Only first element
+	$element = $element.first();
 
 	// jQuery elements
 	this.$window = $(window);
+	var $parent = $element.parent();
 
 	// Default options
 	var defaultOptions = {
 		scroll: this.$window,
-		width: $box,
+		width: $parent,
+		box: $parent,
 		top: 0,
 		bottom: 0
 	};
@@ -43,7 +48,7 @@ djs.Sticky = function($element, $box, options) {
 
 	// Other jQuery elements
 	this.$element = $element;
-	this.$box = $box;
+	this.$box = options.box;
 	this.$scroll = options.scroll;
 	this.$placeholder = null;
 
@@ -186,8 +191,8 @@ djs.Sticky.prototype._update = function() {
 
 	// Get actual values
 	var scrollTop = this.$scroll.scrollTop();
-	var eleH = this.$element.height();
-	var boxH = this.$box.height();
+	var eleH = this.$element.outerHeight();
+	var boxH = this.$box.outerHeight();
 	var winH = this.$window.height();
 	var boxOffset = this.$box.offset();
 
@@ -199,12 +204,12 @@ djs.Sticky.prototype._update = function() {
 		css.position = 'fixed';
 
 		// If the element is smaller than the window
-		if (boxOffset.top + eleH <= winH) {
+		if (this.top + eleH <= winH) {
 
 			// End of scrolling, put element at the bottom of box
-			if (scrollTop - boxOffset.top >= boxH - eleH - this.bottom) {
+			if (scrollTop - boxOffset.top >= boxH - eleH - this.top - this.bottom) {
 
-				css.bottom = (scrollTop + winH - (boxOffset.top + this.top + boxH - this.bottom)) + 'px';
+				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.bottom)) + 'px';
 				css.top = '';
 			}
 			// Is scrolling, put the element on top
