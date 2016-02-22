@@ -22,11 +22,15 @@ var __DJS_STICKY_COUNTER = 0;
  * Constructor
  *
  * @requires resize
+ * @todo introduce min bottom space
  *
  * @param {Object} $element				Sticky element
  * @param {Object} options				Additional options
  */
 djs.Sticky = function($element, options) {
+
+	//Only first element
+	$element = $element.first();
 
 	// jQuery elements
 	this.$window = $(window);

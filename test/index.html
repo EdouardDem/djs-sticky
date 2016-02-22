@@ -39,6 +39,7 @@
             background: #e4808f;
             clear: both;
             margin-top: 20px;
+            position: relative;
         }
         .clearfix:after {
             content: "";
@@ -90,6 +91,11 @@
             padding: 20px 0;
         }
 
+        .bottom .outside {
+            top: 0;
+            left: -80px;
+        }
+
     </style>
 </head>
 <body>
@@ -97,8 +103,6 @@
         <button onclick="toggle();" id="toggle">Deactivate</button>
     </div>
     <div class="cnt">
-
-
 
         <div class="outside">
             <div class="sticky-abs-cnt" id="sticky-cnt-3">
@@ -122,12 +126,11 @@
             </div>
         </div>
 
-
         <div class="inr">
             <div class="row clearfix" id="sticky-cnt">
 
                 <div class="right" id="right-col">
-                    <div id="lipsum">
+                    <div class="lipsum">
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc non feugiat sem, vel congue orci. Sed sollicitudin orci et turpis maximus, quis imperdiet elit maximus. Sed aliquam id lectus et posuere. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed vitae gravida enim. Maecenas cursus est non nisi feugiat, ac tincidunt ipsum commodo. Mauris rhoncus ultricies arcu, eget placerat urna pretium vitae. Donec dignissim finibus justo vel scelerisque.
                         </p>
@@ -188,7 +191,6 @@
                         <p>
                             Aliquam ac aliquam sapien. Duis nisi enim, mollis id ornare id, lacinia vel tellus. Nunc consectetur erat diam, vel vestibulum nulla finibus a. Fusce et laoreet nisi, ac rhoncus lectus. Vestibulum auctor orci neque, a interdum arcu consequat sed. Pellentesque ornare fringilla mattis. Morbi a ante nec erat pharetra mattis a vel ante. Praesent augue nunc, mattis nec varius et, cursus ut nunc.
                         </p></div>
-
                 </div>
 
                 <div class="left sticky-cnt" id="sticky-cnt-1">
@@ -220,7 +222,59 @@
 
             </div>
 
-            <div class="bottom">
+            <div class="bottom" id="bottom-block">
+                <div class="outside">
+                    <div class="sticky-abs-cnt" id="sticky-cnt-4">
+                        <div class="sticky">
+                            <div class="blue">
+                                <div>&uarr;</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>|</div>
+                                <div>&darr;</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lipsum">
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc non feugiat sem, vel congue orci. Sed sollicitudin orci et turpis maximus, quis imperdiet elit maximus. Sed aliquam id lectus et posuere. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed vitae gravida enim. Maecenas cursus est non nisi feugiat, ac tincidunt ipsum commodo. Mauris rhoncus ultricies arcu, eget placerat urna pretium vitae. Donec dignissim finibus justo vel scelerisque.
                     </p>
@@ -280,7 +334,7 @@
                     </p>
                     <p>
                         Aliquam ac aliquam sapien. Duis nisi enim, mollis id ornare id, lacinia vel tellus. Nunc consectetur erat diam, vel vestibulum nulla finibus a. Fusce et laoreet nisi, ac rhoncus lectus. Vestibulum auctor orci neque, a interdum arcu consequat sed. Pellentesque ornare fringilla mattis. Morbi a ante nec erat pharetra mattis a vel ante. Praesent augue nunc, mattis nec varius et, cursus ut nunc.
-                    </p>
+                    </p></div>
             </div>
         </div>
     </div>
