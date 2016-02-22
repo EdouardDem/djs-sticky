@@ -20,21 +20,19 @@
             border-radius: 5px;
             margin-bottom: 20px;
         }
-        .left {
-            float: left;
-            width: calc(30% - 20px);
-            height: 1600px;
-            background-color: #ddd;
-        }
-        .blue {
-            padding: 20px;
-            background: #299fe4;
+        .cnt {
+            font-family: Helvetica, Arial;
+            position: relative;
         }
         .right {
             padding: 20px;
             background: #e4808f;
             float: right;
             width: 70%;
+        }
+        .left {
+            float: left;
+            width: calc(30% - 20px);
         }
         .bottom {
             padding: 20px;
@@ -47,9 +45,51 @@
             display: block;
             clear: both;
         }
+
+        .sticky-cnt {
+            background-color: #ddd;
+        }
+        #sticky-cnt-1 {
+            height: 1400px;
+        }
+        #sticky-cnt-2 {
+            height: 1000px;
+            clear: left;
+            margin-top: 20px;
+            position: relative;
+        }
+        #sticky-cnt-2:after {
+            content: "";
+            display: block;
+            height:60px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ccc;
+        }
+
+
+        .blue {
+            padding: 20px;
+            background: #299fe4;
+        }
         ul {
             padding-left: 15px;
+            opacity: 0.3;
         }
+
+
+        .outside {
+            position: absolute;
+            left: -60px;
+            width: 40px;
+            text-align: center;
+        }
+        .outside .blue {
+            padding: 20px 0;
+        }
+
     </style>
 </head>
 <body>
@@ -57,24 +97,36 @@
         <button onclick="toggle();" id="toggle">Deactivate</button>
     </div>
     <div class="cnt">
+
+
+
+        <div class="outside">
+            <div class="sticky-abs-cnt" id="sticky-cnt-3">
+                <div class="sticky">
+                    <div class="blue">
+                        <div>&uarr;</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>|</div>
+                        <div>&darr;</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="inr">
             <div class="row clearfix" id="sticky-cnt">
 
-                <div class="left">
-                    <div id="sticky">
-                        <div class="blue">
-                            <ul>
-                                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-                                <li>Nulla commodo dolor id orci molestie malesuada.</li>
-                                <li>Phasellus ac ipsum quis tortor malesuada posuere nec a eros.</li>
-                                <li>Pellentesque non mi et diam dictum luctus vitae id ante.</li>
-                                <li>Praesent rhoncus diam sit amet lorem dapibus vestibulum.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="right">
+                <div class="right" id="right-col">
                     <div id="lipsum">
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc non feugiat sem, vel congue orci. Sed sollicitudin orci et turpis maximus, quis imperdiet elit maximus. Sed aliquam id lectus et posuere. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed vitae gravida enim. Maecenas cursus est non nisi feugiat, ac tincidunt ipsum commodo. Mauris rhoncus ultricies arcu, eget placerat urna pretium vitae. Donec dignissim finibus justo vel scelerisque.
@@ -138,10 +190,37 @@
                         </p></div>
 
                 </div>
+
+                <div class="left sticky-cnt" id="sticky-cnt-1">
+                    <div class="sticky">
+                        <div class="blue">
+                            <p>This one starts with a 20px offset.</p>
+                            <ul>
+                                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+                                <li>Nulla commodo dolor id orci molestie malesuada.</li>
+                                <li>Phasellus ac ipsum quis tortor malesuada posuere nec a eros.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="left sticky-cnt" id="sticky-cnt-2">
+                    <div class="sticky">
+                        <div class="blue">
+                            <p>This one starts with a 20px offset.</p>
+                            <ul>
+                                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+                                <li>Nulla commodo dolor id orci molestie malesuada.</li>
+                                <li>Phasellus ac ipsum quis tortor malesuada posuere nec a eros.</li>
+                            </ul>
+                            <p>And stops with a 60px offset.</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <div class="bottom">
-                <div id="lipsum">
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc non feugiat sem, vel congue orci. Sed sollicitudin orci et turpis maximus, quis imperdiet elit maximus. Sed aliquam id lectus et posuere. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed vitae gravida enim. Maecenas cursus est non nisi feugiat, ac tincidunt ipsum commodo. Mauris rhoncus ultricies arcu, eget placerat urna pretium vitae. Donec dignissim finibus justo vel scelerisque.
                     </p>
@@ -201,7 +280,7 @@
                     </p>
                     <p>
                         Aliquam ac aliquam sapien. Duis nisi enim, mollis id ornare id, lacinia vel tellus. Nunc consectetur erat diam, vel vestibulum nulla finibus a. Fusce et laoreet nisi, ac rhoncus lectus. Vestibulum auctor orci neque, a interdum arcu consequat sed. Pellentesque ornare fringilla mattis. Morbi a ante nec erat pharetra mattis a vel ante. Praesent augue nunc, mattis nec varius et, cursus ut nunc.
-                    </p></div>
+                    </p>
             </div>
         </div>
     </div>
