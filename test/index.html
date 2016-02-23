@@ -47,6 +47,9 @@
             clear: both;
         }
 
+        .widget {
+            margin-bottom: 20px;
+        }
         .sticky-cnt {
             background-color: #ddd;
         }
@@ -125,7 +128,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-
+        }
+        .bottom .outside.second:before {
+            content: "";
+            display: block;
+            background: #9c4de4;
+            height: 100px;
+            margin-bottom: 20px;
         }
 
     </style>
@@ -226,6 +235,11 @@
                 </div>
 
                 <div class="left sticky-cnt" id="sticky-cnt-1">
+                    <div class="widget">
+                        <div class="blue">
+                            <p>This won't move.</p>
+                        </div>
+                    </div>
                     <div class="sticky">
                         <div class="blue">
                             <p>This one starts with a 20px offset.</p>
