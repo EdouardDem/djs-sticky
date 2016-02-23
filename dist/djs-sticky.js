@@ -265,12 +265,28 @@ djs.Sticky.prototype.rebind = function() {
  *
  * @return {Object}
  */
-
 djs.Sticky.prototype.refresh = function() {
 	this._resize();
 
 	return this;
 };
+/**
+ * Get the id
+ *
+ * @return {number}
+ */
+djs.Sticky.prototype.id = function() {
+	return this._id;
+};
+/**
+ * Get if active
+ *
+ * @return {boolean}
+ */
+djs.Sticky.prototype.on = function() {
+	return this._on;
+};
+
 
 
 
