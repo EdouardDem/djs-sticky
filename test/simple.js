@@ -19,7 +19,7 @@ clearLog = function () {
  */
 stickies = [];
 toggle = function() {
-	if (stickies[0].on) {
+	if (stickies[0].on()) {
 		for(var i=0; i<stickies.length; i++)
 			stickies[i].unbind();
 		$('#toggle').text('Activate');
@@ -88,22 +88,22 @@ $(document).ready(function () {
 
 		// Bind bind callback
 		stickies[i].didBind = function() {
-			displayLog('Sticky "' + this.id + '" has been activated');
+			displayLog('Sticky "' + this.id() + '" has been activated');
 		}.bind(stickies[i]);
 
 		// Bind start callback
 		stickies[i].didStart = function(position) {
-			displayLog('Sticky "' + this.id + '" did start from ' + position);
+			displayLog('Sticky "' + this.id() + '" did start from ' + position);
 		}.bind(stickies[i]);
 
 		// Bind end callback
 		stickies[i].didStop = function(position) {
-			displayLog('Sticky "' + this.id + '" did reach ' + position);
+			displayLog('Sticky "' + this.id() + '" did reach ' + position);
 		}.bind(stickies[i]);
 
 		// Bind unbind callback
 		stickies[i].willUnbind = function() {
-			displayLog('Sticky "' + this.id + '" will be deactivated');
+			displayLog('Sticky "' + this.id() + '" will be deactivated');
 		}.bind(stickies[i]);
 	}
 
