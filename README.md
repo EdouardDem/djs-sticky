@@ -125,6 +125,11 @@ Like CSS classes, it also triggers callbacks. Those callbacks are:
 - `didStart` when the element starts to stick. The old position (top or bottom) is passed as an argument.
 - `didStop` when the element reaches a stop. The reached position (top or bottom) is passed as an argument.
 
+### Other methods
+
+You can retrieve the identifier or the object by calling the function `id`.
+You can also get the status (active or not) of an element by calling the `on` function.
+
 ## Example
 
 Here is a full example, using [djs-breakpoints](https://github.com/EdouardDem/djs-breakpoints).
