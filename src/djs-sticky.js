@@ -58,6 +58,11 @@ djs.Sticky = function($element, options) {
 	this.$box = options.box;
 	this.$scroll = options.scroll;
 	this.$placeholder = null;
+	this.offset = 0;
+	this.boxOffset = 0;
+	this.windowHeight = 0;
+	this.boxHeight = 0;
+	this.elementHeight = 0;
 
 	// Properties
 	this.width = options.width;
@@ -95,7 +100,7 @@ djs.Sticky.prototype.bind = function() {
 	this.$element.after(this.$placeholder);
 
 	// Set element width
-	this._setWidth();
+	this._setDimensions();
 
 	// Position
 	this._setPosition('top');
@@ -180,18 +185,18 @@ djs.Sticky.prototype._resize = function() {
 	// Check if active
 	if (!this.on) return;
 
-	// Update width
-	this._setWidth();
+	// Update width & co
+	this._setDimensions();
 
 	// Update display
 	this._update();
 };
 /**
- * Set width of sticky element
+ * Set width of sticky element and other values
  *
  * @private
  */
-djs.Sticky.prototype._setWidth = function() {
+djs.Sticky.prototype._setDimensions = function() {
 
 	// width is jQuery object or not ?
 	if (typeof this.width == "object") {
@@ -203,6 +208,16 @@ djs.Sticky.prototype._setWidth = function() {
 	// Update placeholder dimensions
 	this.$placeholder.width(this.$element.outerWidth());
 	this.$placeholder.height(this.$element.outerHeight());
+
+	// Save top offsets for box and element
+	this.offset = this._getTopOffset();
+	this.boxOffset = this.$box.offset().top;
+
+	// Save element dimensions
+	this.windowHeight = this.$window.height();
+	this.boxHeight = this.$box.outerHeight();
+	this.elementHeight = this.$element.outerHeight();
+
 };
 /**
  * Define position (without callbacks)
@@ -224,6 +239,20 @@ djs.Sticky.prototype._setPosition = function(position) {
 	this.position = position;
 };
 /**
+ * Returns the top offset of the element
+ *
+ * @private
+ * @return {integer}
+ */
+djs.Sticky.prototype._getTopOffset = function() {
+
+	if (this.$placeholder.is(':visible')) {
+		return this.$placeholder.offset().top;
+	} else {
+		return this.$element.offset().top;
+	}
+};
+/**
  * Called on scroll
  *
  * @callback didStart
@@ -237,26 +266,22 @@ djs.Sticky.prototype._update = function() {
 
 	// Get actual values
 	var scrollTop = this.$scroll.scrollTop();
-	var eleH = this.$element.outerHeight();
-	var boxH = this.$box.outerHeight();
-	var winH = this.$window.height();
-	var boxOffset = this.$box.offset();
 	var position = "middle";
 
 	// If actual scroll is lower than box' top + top offset
-	if (scrollTop > boxOffset.top - this.top &&
-		scrollTop + winH >= boxOffset.top + eleH + this.bottom) {
+	if (scrollTop > this.offset - this.top &&
+		scrollTop + this.windowHeight >= this.offset + this.elementHeight + this.bottom) {
 
 		var css = {};
 		css.position = 'fixed';
 
 		// If the element is smaller than the window
-		if (this.top + eleH  + this.bottom <= winH) {
+		if (this.top + this.elementHeight + this.bottom <= this.windowHeight) {
 
 			// End of scrolling, put element at the bottom of box
-			if (scrollTop - boxOffset.top >= boxH - eleH - this.top - this.boxBottom) {
+			if (scrollTop - this.boxOffset >= this.boxHeight - this.elementHeight - this.top - this.boxBottom) {
 
-				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.boxBottom)) + 'px';
+				css.bottom = (scrollTop + this.windowHeight - (this.boxOffset + this.boxHeight - this.boxBottom)) + 'px';
 				css.top = '';
 				position = 'bottom';
 			}
@@ -272,9 +297,9 @@ djs.Sticky.prototype._update = function() {
 		else {
 
 			// End of scrolling
-			if (scrollTop + winH - this.bottom >= boxOffset.top + boxH - this.boxBottom) {
+			if (scrollTop + this.windowHeight - this.bottom >= this.boxOffset + this.boxHeight - this.boxBottom) {
 
-				css.bottom = (scrollTop + winH - (boxOffset.top + boxH - this.boxBottom)) + 'px';
+				css.bottom = (scrollTop + this.windowHeight - (this.boxOffset + this.boxHeight - this.boxBottom)) + 'px';
 				css.top = '';
 				position = 'bottom';
 			}
